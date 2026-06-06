@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Build Windows artifacts
+    runs-on: windows-latest
+
+    env:
+      CGO_ENABLED: "0"
+      GOOS: windows
+      GOARCH: amd64
+      GOTOOLCHAIN: local
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Test
+        run: go test ./...
+
+      - name: Build CLI
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist
+          go build -trimpath -ldflags "-s -w -X main.version=${{ github.ref_name }}" -o dist/nudgemug-windows-amd64.exe ./cmd/nudgemug
+
+      - name: Build tray
+        shell: pwsh
+        run: go build -trimpath -ldflags "-s -w -H=windowsgui -X main.version=${{ github.ref_name }}" -o dist/nudgemug-tray-windows-amd64.exe ./cmd/nudgemug-tray
+
+      - name: Package portable zip and checksums
+        shell: pwsh
+        run: |
+          Compress-Archive -Path dist/*.exe -DestinationPath dist/nudgemug-windows-amd64.zip
+          Get-FileHash dist/* -Algorithm SHA256 |
+            ForEach-Object { "$($_.Hash.ToLower())  $(Split-Path $_.Path -Leaf)" } |
+            Set-Content -NoNewline -Path dist/checksums.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nudgemug-windows-amd64
+          path: dist/*
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
