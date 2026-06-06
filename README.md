@@ -105,12 +105,20 @@ Switching modes while a session is active keeps the same duration session, stops
 
 ### Tray feedback
 
-The tray stays tray-only: no window, no settings panel, no custom popover. Start/Stop swap between active and stopped icons, and the tooltip mirrors the menu header so you can confirm what NudgeMug is doing without opening anything else.
+The tray stays tray-only: no window, no settings panel, no custom popover. Start/Stop swap between active and stopped icons, and the tooltip keeps a short readable state summary so you can confirm what NudgeMug is doing without opening anything else.
 
-Screenshot pending. Expected menu shape:
+Real Windows tray menu:
+
+![NudgeMug Windows tray menu](docs/assets/nudgemug-tray-menu.png)
+
+Short tray tooltip:
+
+![NudgeMug Windows tray tooltip](docs/assets/nudgemug-tray-tooltip.png)
+
+Expected menu shape:
 
 ```text
-Active - Nudge - 1:23:45 left - stops 17:00 - next nudge in 14s - last nudge 16:42:10
+Active · Nudge · stops 17:00 · next nudge 14s · last nudge 16:42:10
 ----------------
 Nudge now
 ----------------

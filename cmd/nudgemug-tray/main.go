@@ -403,7 +403,6 @@ func (app *trayApp) updateStatus() {
 	sessionEnd := app.sessionEnd
 	lastNudge := app.lastNudge
 	lastErr := app.lastErr
-	mechanismName := app.mechanismNameLocked()
 	app.mu.Unlock()
 
 	state := "Stopped"
@@ -412,19 +411,19 @@ func (app *trayApp) updateStatus() {
 	}
 
 	session := sessionSummary(time.Now(), running, sessionEnd)
-	last := "last nudge --:--:--"
+	last := "last nudge pending"
 	if !lastNudge.IsZero() {
 		last = "last nudge " + lastNudge.Format("15:04:05")
 	}
 
 	header := buildStatusHeader(state, mode, session, nudgeSummary(running, mode, nextNudge, last))
 	if lastErr != nil {
-		header = fmt.Sprintf("%s - %s - error: %s - %s", state, mode, lastErr.Error(), last)
+		header = fmt.Sprintf("%s · %s · error: %s · %s", state, mode, lastErr.Error(), last)
 	}
 
 	if app.statusItem != nil {
 		app.statusItem.SetTitle(header)
-		systray.SetTooltip(fmt.Sprintf("NudgeMug %s: %s (%s)", version, header, mechanismName))
+		systray.SetTooltip(buildTooltip(state, mode, session))
 	}
 }
 

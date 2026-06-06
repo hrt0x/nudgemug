@@ -27,7 +27,7 @@ func TestSessionSummaryFinite(t *testing.T) {
 	end := now.Add(time.Hour + 23*time.Minute + 45*time.Second)
 
 	got := sessionSummary(now, true, end)
-	want := "1:23:45 left - stops 13:23"
+	want := "stops 13:23"
 	if got != want {
 		t.Fatalf("sessionSummary finite = %q, want %q", got, want)
 	}
@@ -54,8 +54,8 @@ func TestFormatDuration(t *testing.T) {
 }
 
 func TestBuildStatusHeader(t *testing.T) {
-	got := buildStatusHeader("Active", modeCaffeine, "1:23:45 left - stops 13:23", "last nudge 12:00:00")
-	want := "Active - Caffeine - 1:23:45 left - stops 13:23 - last nudge 12:00:00"
+	got := buildStatusHeader("Active", modeCaffeine, "stops 13:23", "last nudge 12:00:00")
+	want := "Active · Caffeine · stops 13:23 · last nudge 12:00:00"
 	if got != want {
 		t.Fatalf("buildStatusHeader = %q, want %q", got, want)
 	}
@@ -65,10 +65,29 @@ func TestNudgeStatusIncludesNextNudge(t *testing.T) {
 	next := time.Now().Add(14 * time.Second)
 
 	got := buildStatusHeader("Active", modeNudge, "until stopped", nudgeSummary(true, modeNudge, next, "last nudge 12:00:00"))
-	for _, want := range []string{"Active - Nudge - until stopped", "next nudge in", "last nudge 12:00:00"} {
+	for _, want := range []string{"Active · Nudge · until stopped", "next nudge", "last nudge 12:00:00"} {
 		if !strings.Contains(got, want) {
 			t.Fatalf("buildStatusHeader = %q, want to contain %q", got, want)
 		}
+	}
+}
+
+func TestNudgeStatusOmitsNextWhenStopped(t *testing.T) {
+	got := nudgeSummary(false, modeNudge, time.Time{}, "last nudge pending")
+	want := "last nudge pending"
+	if got != want {
+		t.Fatalf("nudgeSummary stopped = %q, want %q", got, want)
+	}
+}
+
+func TestBuildTooltipStaysShort(t *testing.T) {
+	got := buildTooltip("Active", modeNudge, "stops 13:23")
+	want := "NudgeMug dev · Active (Nudge) · stops 13:23"
+	if got != want {
+		t.Fatalf("buildTooltip = %q, want %q", got, want)
+	}
+	if len(got) > 80 {
+		t.Fatalf("buildTooltip length = %d, want short enough for tray tooltip", len(got))
 	}
 }
 

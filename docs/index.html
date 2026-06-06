@@ -30,15 +30,18 @@
       font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--ink);
+      overflow-x: hidden;
     }
     a { color: var(--blue); }
+    img { max-width: 100%; }
     .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
     header { padding: 22px 0; border-bottom: 1px solid var(--line); }
-    nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
     .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: 0; }
     .mug { width: 34px; height: 34px; image-rendering: pixelated; }
     .navlinks { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; }
     .hero { padding: 52px 0 34px; display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(340px, 1.18fr); gap: 38px; align-items: center; }
+    .hero > * { min-width: 0; }
     h1 { font-size: clamp(42px, 8vw, 84px); line-height: 0.94; margin: 0 0 18px; letter-spacing: 0; }
     .lede { font-size: clamp(18px, 2.2vw, 24px); color: var(--muted); max-width: 620px; margin: 0 0 26px; }
     .actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
@@ -46,11 +49,15 @@
     .primary { background: var(--accent); color: white; }
     .primary:hover { background: var(--accent-strong); }
     .secondary { color: var(--accent); background: rgba(255,255,255,0.72); }
-    .terminal { margin-top: 18px; padding: 12px 14px; background: #1f252c; color: #edf5f2; border-radius: 8px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 14px; overflow-x: auto; border-left: 4px solid var(--coral); }
-    .demo { width: 100%; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 18px 42px rgba(31,37,44,.14); background: var(--card); }
+    .terminal { margin-top: 18px; padding: 12px 14px; background: #1f252c; color: #edf5f2; border-radius: 8px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 14px; overflow-wrap: anywhere; border-left: 4px solid var(--coral); }
+    .terminal .muted { display: block; margin-top: 2px; }
+    .demo { display: block; width: 100%; max-width: 100%; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 18px 42px rgba(31,37,44,.14); background: var(--card); }
     .section { padding: 34px 0; }
     .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 18px; }
+    .shots { display: grid; grid-template-columns: minmax(0, 520px) minmax(0, 1fr); gap: 14px; align-items: start; }
+    .shot { display: block; width: auto; max-width: 100%; height: auto; object-fit: contain; background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+    .shot-stack { display: grid; gap: 14px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 18px; min-width: 0; }
     h2 { font-size: 30px; margin: 0 0 14px; }
     h3 { margin: 0 0 8px; font-size: 18px; }
     p { margin: 0 0 12px; }
@@ -59,10 +66,21 @@
     .download-band { margin-top: 20px; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--coral); border-radius: 8px; padding: 18px; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; }
     footer { padding: 34px 0 46px; color: var(--muted); border-top: 1px solid var(--line); margin-top: 24px; }
     @media (max-width: 840px) {
-      .hero { grid-template-columns: 1fr; padding-top: 34px; }
+      .hero { grid-template-columns: minmax(0, 1fr); padding-top: 34px; }
       .grid { grid-template-columns: 1fr; }
+      .shots { grid-template-columns: 1fr; }
       .download-band { grid-template-columns: 1fr; }
       .navlinks { justify-content: flex-end; }
+    }
+    @media (max-width: 520px) {
+      .wrap { width: 100%; padding-left: 16px; padding-right: 16px; }
+      header { padding: 18px 0; }
+      nav { display: grid; grid-template-columns: 1fr; align-items: flex-start; }
+      .navlinks { justify-content: flex-start; gap: 12px; font-size: 14px; width: 100%; }
+      h1 { font-size: 42px; }
+      .lede { font-size: 18px; }
+      .actions { display: grid; grid-template-columns: 1fr; }
+      .btn { width: 100%; }
     }
   </style>
 </head>
@@ -92,9 +110,20 @@
           <a class="btn primary" href="https://github.com/hrt0x/nudgemug/releases/latest/download/nudgemug-tray-windows-amd64.exe">Download for Windows</a>
           <a class="btn secondary" href="https://github.com/hrt0x/nudgemug/releases/latest">All downloads</a>
         </div>
-        <div class="terminal">winget install hrt0x.NudgeMug <span class="muted"># coming after v1.0.0 manifest approval</span></div>
+        <div class="terminal">winget install Hrt0x.NudgeMug <span class="muted"># pending winget review</span></div>
       </div>
       <img class="demo" src="assets/nudgemug-demo.gif" alt="NudgeMug tray menu demo showing a visible mouse nudge and countdown.">
+    </section>
+
+    <section class="section wrap">
+      <h2>Native tray, no ceremony</h2>
+      <div class="shots">
+        <img class="shot" src="assets/nudgemug-tray-menu.png" alt="NudgeMug native Windows tray menu with Nudge and Caffeine modes.">
+        <div class="shot-stack">
+          <img class="shot" src="assets/nudgemug-tray-tooltip.png" alt="NudgeMug short Windows tray tooltip.">
+          <img class="shot" src="assets/nudgemug-tray-icons.png" alt="NudgeMug icon inside the Windows tray overflow menu.">
+        </div>
+      </div>
     </section>
 
     <section class="section wrap">

@@ -12,29 +12,35 @@ func sessionSummary(now time.Time, running bool, sessionEnd time.Time) string {
 	if sessionEnd.IsZero() {
 		return "until stopped"
 	}
-	remaining := sessionEnd.Sub(now)
-	if remaining < 0 {
-		remaining = 0
-	}
-	return fmt.Sprintf("%s left - stops %s", formatDuration(remaining), sessionEnd.Format("15:04"))
+	return "stops " + sessionEnd.Format("15:04")
 }
 
 func nudgeSummary(running bool, mode keepMode, nextNudge time.Time, last string) string {
 	if mode != modeNudge {
 		return last
 	}
-	next := "next nudge in --"
-	if running && !nextNudge.IsZero() {
-		next = fmt.Sprintf("next nudge in %ds", secondsUntil(nextNudge))
+	if !running {
+		return last
 	}
-	return fmt.Sprintf("%s - %s", next, last)
+	next := "next nudge pending"
+	if !nextNudge.IsZero() {
+		next = fmt.Sprintf("next nudge %ds", secondsUntil(nextNudge))
+	}
+	return fmt.Sprintf("%s · %s", next, last)
 }
 
 func buildStatusHeader(state string, mode keepMode, session, detail string) string {
 	if session == "" {
-		return fmt.Sprintf("%s - %s - %s", state, mode, detail)
+		return fmt.Sprintf("%s · %s · %s", state, mode, detail)
 	}
-	return fmt.Sprintf("%s - %s - %s - %s", state, mode, session, detail)
+	return fmt.Sprintf("%s · %s · %s · %s", state, mode, session, detail)
+}
+
+func buildTooltip(state string, mode keepMode, session string) string {
+	if session == "" {
+		return fmt.Sprintf("NudgeMug %s · %s (%s)", version, state, mode)
+	}
+	return fmt.Sprintf("NudgeMug %s · %s (%s) · %s", version, state, mode, session)
 }
 
 func formatDuration(duration time.Duration) string {
