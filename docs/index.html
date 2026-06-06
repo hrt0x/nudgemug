@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NudgeMug - Windows keep-awake tray app</title>
+  <meta name="description" content="NudgeMug is a tiny Windows keep-awake tray app with polite mouse nudges, caffeine mode, portable downloads, and no telemetry.">
+  <meta property="og:title" content="NudgeMug - Windows keep-awake tray app">
+  <meta property="og:description" content="Keep your laptop politely awake, one nudge at a time.">
+  <meta property="og:image" content="https://hrt0x.github.io/nudgemug/assets/nudgemug-preview.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/nudgemug.ico">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f8fb;
+      --ink: #1f252c;
+      --muted: #65717d;
+      --card: #ffffff;
+      --line: #dbe3ec;
+      --accent: #246b63;
+      --accent-strong: #174f49;
+      --coral: #df684f;
+      --blue: #2f67b1;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    a { color: var(--blue); }
+    .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 22px 0; border-bottom: 1px solid var(--line); }
+    nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: 0; }
+    .mug { width: 34px; height: 34px; image-rendering: pixelated; }
+    .navlinks { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; }
+    .hero { padding: 52px 0 34px; display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(340px, 1.18fr); gap: 38px; align-items: center; }
+    h1 { font-size: clamp(42px, 8vw, 84px); line-height: 0.94; margin: 0 0 18px; letter-spacing: 0; }
+    .lede { font-size: clamp(18px, 2.2vw, 24px); color: var(--muted); max-width: 620px; margin: 0 0 26px; }
+    .actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border-radius: 8px; text-decoration: none; font-weight: 750; border: 1px solid var(--accent); }
+    .primary { background: var(--accent); color: white; }
+    .primary:hover { background: var(--accent-strong); }
+    .secondary { color: var(--accent); background: rgba(255,255,255,0.72); }
+    .terminal { margin-top: 18px; padding: 12px 14px; background: #1f252c; color: #edf5f2; border-radius: 8px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 14px; overflow-x: auto; border-left: 4px solid var(--coral); }
+    .demo { width: 100%; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 18px 42px rgba(31,37,44,.14); background: var(--card); }
+    .section { padding: 34px 0; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 18px; }
+    h2 { font-size: 30px; margin: 0 0 14px; }
+    h3 { margin: 0 0 8px; font-size: 18px; }
+    p { margin: 0 0 12px; }
+    ul { margin: 0; padding-left: 20px; color: var(--muted); }
+    .muted { color: var(--muted); }
+    .download-band { margin-top: 20px; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--coral); border-radius: 8px; padding: 18px; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; }
+    footer { padding: 34px 0 46px; color: var(--muted); border-top: 1px solid var(--line); margin-top: 24px; }
+    @media (max-width: 840px) {
+      .hero { grid-template-columns: 1fr; padding-top: 34px; }
+      .grid { grid-template-columns: 1fr; }
+      .download-band { grid-template-columns: 1fr; }
+      .navlinks { justify-content: flex-end; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <nav>
+        <div class="brand">
+          <img class="mug" src="assets/nudgemug.ico" alt="">
+          <span>NudgeMug</span>
+        </div>
+        <div class="navlinks">
+          <a href="https://github.com/hrt0x/nudgemug/releases/latest">Download</a>
+          <a href="https://github.com/hrt0x/nudgemug">GitHub</a>
+          <a href="#security">Security</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <div>
+        <h1>Keep your laptop politely awake.</h1>
+        <p class="lede">NudgeMug is a tiny Windows tray app for demos, uploads, long builds, reading, remote sessions, and those suspiciously human pauses where you are just thinking.</p>
+        <div class="actions">
+          <a class="btn primary" href="https://github.com/hrt0x/nudgemug/releases/latest/download/nudgemug-tray-windows-amd64.exe">Download for Windows</a>
+          <a class="btn secondary" href="https://github.com/hrt0x/nudgemug/releases/latest">All downloads</a>
+        </div>
+        <div class="terminal">winget install hrt0x.NudgeMug <span class="muted"># coming after v1.0.0 manifest approval</span></div>
+      </div>
+      <img class="demo" src="assets/nudgemug-demo.gif" alt="NudgeMug tray menu demo showing a visible mouse nudge and countdown.">
+    </section>
+
+    <section class="section wrap">
+      <div class="grid">
+        <div class="card">
+          <h3>Nudge mode</h3>
+          <p class="muted">A small visible mouse square plus a harmless F15 key signal every minute, using the modern Windows SendInput path.</p>
+        </div>
+        <div class="card">
+          <h3>Caffeine mode</h3>
+          <p class="muted">Keeps the system and display awake without sending user input. Useful for downloads, builds, and presentations.</p>
+        </div>
+        <div class="card">
+          <h3>Finite sessions</h3>
+          <p class="muted">Start for 15 minutes, 1 hour, 2 hours, or until stopped. Visible status tells you what it is doing.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section wrap" id="security">
+      <h2>Small by design</h2>
+      <div class="grid">
+        <div class="card"><h3>No telemetry</h3><p class="muted">NudgeMug does not phone home, collect analytics, or send data anywhere.</p></div>
+        <div class="card"><h3>Portable</h3><p class="muted">Download the tray exe, run it, quit it. No service, scheduler, account, or background updater.</p></div>
+        <div class="card"><h3>Open source</h3><p class="muted">The source, release assets, and checksums live on GitHub.</p></div>
+      </div>
+      <div class="download-band">
+        <div>
+          <strong>Windows SmartScreen may warn on early unsigned builds.</strong>
+          <p class="muted">Verify the SHA256 checksum from the GitHub release. Code signing can come after traction; transparency comes now.</p>
+        </div>
+        <a class="btn secondary" href="https://github.com/hrt0x/nudgemug/releases/latest/download/checksums.txt">Checksums</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">NudgeMug is independent software. Use it on your own machine and respect your organization's policies.</div>
+  </footer>
+</body>
+</html>

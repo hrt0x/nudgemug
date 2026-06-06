@@ -4,7 +4,17 @@ Keep your laptop politely alive.
 
 `NudgeMug` is a tiny CLI and Windows tray app for finite keep-awake sessions. It is for reading, demos, long builds, downloads, presentations, remote sessions, and those suspiciously human pauses where you are just thinking.
 
-> Status: tray-first useful-market build. Small, visible, and intentionally not a platform.
+![NudgeMug demo](docs/assets/nudgemug-demo.gif)
+
+> Tiny Windows keep-awake tray app. Portable, visible, and intentionally not a platform.
+
+## Download
+
+- Website: <https://hrt0x.github.io/nudgemug/>
+- Latest release: <https://github.com/hrt0x/nudgemug/releases/latest>
+- Windows tray app: <https://github.com/hrt0x/nudgemug/releases/latest/download/nudgemug-tray-windows-amd64.exe>
+
+Early unsigned Windows builds may trigger SmartScreen. Verify downloads with the release `checksums.txt` file if you want an extra sanity check.
 
 ## Install
 
@@ -82,6 +92,8 @@ Build or download `nudgemug-tray-windows-amd64.exe`, then run it on Windows. The
 Defaults are now Nudge-first: finite sessions visible first, visible reversible SendInput mouse movement plus F15 activity signals every minute, and Windows keep-awake held while Nudge is active. The tray app uses a self-contained built-in icon and does not require admin rights.
 
 Runtime smoke-test note: the tray app is built from this repo and cross-compiled in CI, but the actual tray menu must be manually checked on native Windows after download/build.
+
+Keywords for searchers and package managers: Windows keep awake, prevent sleep, tray app, mouse nudge, caffeine mode, portable exe.
 
 ### Modes
 
